@@ -5,7 +5,13 @@ function App() {
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const [loading, setLoading] = useState(false);
-  const [likedQuotes, setLikedQuotes] = useState([]);
+
+  const [likedQuotes, setLikedQuotes] = useState(() => {
+    const saved = localStorage.getItem("likes");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch random quote
   const fetchQuote = async () => {
@@ -28,25 +34,17 @@ function App() {
     }
   };
 
-  // Load likes from localStorage once
-  useEffect(() => {
-    const savedLikes = JSON.parse(localStorage.getItem("likes"));
-    if (savedLikes) {
-      setLikedQuotes(savedLikes);
-    }
-  }, []);
-
-  // Save likes whenever likedQuotes changes
+  // Save likes
   useEffect(() => {
     localStorage.setItem("likes", JSON.stringify(likedQuotes));
   }, [likedQuotes]);
 
-  // Fetch quote when app loads
+  // Fetch on load
   useEffect(() => {
     fetchQuote();
   }, []);
 
-  // Toggle like/unlike
+  // Toggle like from main card
   const toggleLike = () => {
     const alreadyLiked = likedQuotes.find(
       (item) => item.quote === quote
@@ -64,8 +62,21 @@ function App() {
     }
   };
 
+  // 🔥 Remove like directly from list
+  const removeLike = (quoteToRemove) => {
+    setLikedQuotes(
+      likedQuotes.filter((item) => item.quote !== quoteToRemove)
+    );
+  };
+
   const isLiked = likedQuotes.some(
     (item) => item.quote === quote
+  );
+
+  // Filter liked quotes
+  const filteredQuotes = likedQuotes.filter((item) =>
+    item.quote.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -104,17 +115,41 @@ function App() {
           Liked Quotes
         </h2>
 
-        {likedQuotes.length === 0 ? (
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Search liked quotes..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "8px",
+            marginBottom: "15px",
+            background: "var(--bg-soft)",
+            border: "1px solid var(--border-subtle)",
+            color: "var(--text-primary)",
+            borderRadius: "6px"
+          }}
+        />
+
+        {filteredQuotes.length === 0 ? (
           <p style={{ color: "var(--text-muted)" }}>
-            No liked quotes yet.
+            No matching quotes found.
           </p>
         ) : (
-          likedQuotes.map((item, index) => (
+          filteredQuotes.map((item, index) => (
             <div key={index} className="liked-item">
               <p>"{item.quote}"</p>
               <small style={{ color: "var(--text-muted)" }}>
                 - {item.author}
               </small>
+
+              {/* 🔥 Unlike button inside list */}
+              <div style={{ marginTop: "10px" }}>
+                <button onClick={() => removeLike(item.quote)}>
+                  Unlike ❌
+                </button>
+              </div>
             </div>
           ))
         )}
