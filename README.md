@@ -1,18 +1,105 @@
-# React + Vite
+# Daily Motivation Dashboard - Quotes App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that fetches and displays inspirational quotes with a like system to help students find daily motivation.
 
-Currently, two official plugins are available:
+**[Live Demo](https://quotes-app-midterm.vercel.app/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### Core Functionality
+- **Fetch Random Quotes**: Uses `useEffect` to fetch random quotes from the [DummyJSON Quotes API](https://dummyjson.com)
+- **Like System**: Toggle quotes as liked/unliked with visual feedback (❤️ / 💔)
+- **Liked Quotes List**: View all liked quotes in a persistent collection
+- **Search Functionality**: Search through liked quotes by quote text or author
+- **Local Storage Persistence**: Liked quotes are saved to browser localStorage and persist across sessions
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### UI/UX Features
+- **Loading States**: Shows "Loading..." text while fetching
+- **Button States**: New Quote button is disabled while fetching to prevent multiple simultaneous requests
+- **Like Counter**: Displays the total count of liked quotes
+- **Responsive Design**: Clean, centered layout with intuitive controls
+- **Remove Likes**: Directly remove quotes from the liked collection
 
-Note: This will impact Vite dev & build performances.
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
+- Node.js and npm installed
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+
+```bash
+# Clone or navigate to the project directory
+cd quotes-app-midterm
+
+# Install dependencies
+npm install
+```
+
+### Running the App
+
+**Development mode:**
+```bash
+npm run dev
+```
+The app will open at `http://localhost:5173`
+
+**Build for production:**
+```bash
+npm build
+```
+
+**Preview production build:**
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── App.jsx           # Main component with quote fetching and like system logic
+├── App.css           # Styling for the app
+├── main.jsx          # React DOM entry point
+└── index.css         # Global styles
+```
+
+## State Management
+
+The app uses React's `useState` hook to manage:
+- `quote`: Current quote text
+- `author`: Current quote author
+- `loading`: Loading state while fetching
+- `likedQuotes`: Array of liked quotes stored in localStorage
+- `searchTerm`: Current search filter for liked quotes
+
+## API Integration
+
+Fetches from: `https://dummyjson.com/quotes/random`
+
+Response format:
+```json
+{
+  "quote": "Quote text here",
+  "author": "Author Name"
+}
+```
+
+## Technologies Used
+
+- **React 19.2**: UI framework
+- **Vite 7.3**: Build tool and dev server
+- **React Compiler**: Performance optimization
+- **localStorage**: Client-side data persistence
+
+## How to Use
+
+1. **View a Quote**: The app displays a random quote on load
+2. **Get New Quote**: Click "New Quote" button to fetch a new random quote
+3. **Like a Quote**: Click "Like ❤️" to save it to your liked collection
+4. **View Liked Quotes**: Scroll to the "Liked Quotes" section to see all saved quotes
+5. **Search Likes**: Use the search box to filter liked quotes by text or author
+6. **Unlike Quotes**: Click "Unlike ❌" next to any liked quote to remove it
+
+## Browser Support
+
+Works on all modern browsers with localStorage support (Chrome, Firefox, Safari, Edge).
